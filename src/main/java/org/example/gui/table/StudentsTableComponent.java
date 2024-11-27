@@ -1,28 +1,32 @@
-package org.example.gui;
+package org.example.gui.table;
 
 import org.example.Student;
 import org.example.StudentManager;
+import org.example.gui.GuiContext;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 
-public class StudentsTableComponent extends JPanel {
+public class StudentsTableComponent extends JPanel implements Refreshable {
     private final StudentManager studentManager;
     private final JTable studentsTable;
     private final DefaultTableModel tableModel;
+    public final static String[] columnNames = {"Student ID", "Name", "Age", "Grade"};
 
     private int hoveredRow = -1;
 
     public StudentsTableComponent(StudentManager studentManager) {
         this.studentManager = studentManager;
-        String[] columnNames = {"Student ID", "Name", "Age", "Grade"};
+        GuiContext.addRefreshListener(this);
+
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -37,7 +41,7 @@ public class StudentsTableComponent extends JPanel {
         };
 
         studentsTable.setFillsViewportHeight(true);
-        refreshTable();
+        refresh();
         JScrollPane scrollPane = new JScrollPane(studentsTable);
 
         studentsTable.addMouseMotionListener(new MouseMotionAdapter() {
@@ -63,7 +67,7 @@ public class StudentsTableComponent extends JPanel {
                 int columnIndex = studentsTable.getColumnModel().getColumnIndex(columnNames[0]);
                 String studentID = (String) studentsTable.getValueAt(selectedRow, columnIndex);
                 studentManager.removeStudent(studentID);
-                refreshTable();
+                refresh();
                 studentsTable.clearSelection();
             }
         });
@@ -109,11 +113,13 @@ public class StudentsTableComponent extends JPanel {
     private void updateSelectionContext() {
         int selectedRow = studentsTable.getSelectedRow();
         if (selectedRow != -1) {
-            String studentID = (String) studentsTable.getValueAt(selectedRow, 0);
-            String name = (String) studentsTable.getValueAt(selectedRow, 1);
-            int age = (int) studentsTable.getValueAt(selectedRow, 2);
-            double grade = (double) studentsTable.getValueAt(selectedRow, 3);
-            SelectionContext.setStudent(new Student(name, age, grade, studentID));
+            TableColumnModel columnModel = studentsTable.getColumnModel();
+
+            String studentID = (String) studentsTable.getValueAt(selectedRow, columnModel.getColumnIndex(columnNames[0]));
+            String name = (String) studentsTable.getValueAt(selectedRow, columnModel.getColumnIndex(columnNames[1]));
+            int age = (int) studentsTable.getValueAt(selectedRow, columnModel.getColumnIndex(columnNames[2]));
+            double grade = (double) studentsTable.getValueAt(selectedRow, columnModel.getColumnIndex(columnNames[3]));
+            GuiContext.onSelect(new Student(name, age, grade, studentID));
         }
     }
 
@@ -121,7 +127,8 @@ public class StudentsTableComponent extends JPanel {
     /**
      * Refreshes the table with the latest student data from the database.
      */
-    public void refreshTable() {
+    @Override
+    public void refresh() {
         tableModel.setRowCount(0);
         ArrayList<Student> students = studentManager.displayAllStudents();
         for (Student student : students) {
