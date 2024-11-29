@@ -35,7 +35,9 @@ public class StudentsGUI extends JFrame {
         StudentsTableComponent studentsTableComponent = new StudentsTableComponent(studentManager);
 
         JPanel formPanel = gradientPanel();
-        formPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        formPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
 
         JPanel studentAddFormComponent = new StudentAddFormComponent(studentManager);
         TitledBorder border = new TitledBorder("Add new Student");
@@ -43,13 +45,22 @@ public class StudentsGUI extends JFrame {
         Font titleFont = new Font(defaultTitleFont.getName(), defaultTitleFont.getStyle(), 16);
         border.setTitleFont(titleFont);
         studentAddFormComponent.setBorder(border);
-        formPanel.add(studentAddFormComponent);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        formPanel.add(studentAddFormComponent, gbc);
 
         JPanel studentUpdateFormComponent = new StudentUpdateFormComponent(studentManager);
         TitledBorder border2 = new TitledBorder("Update existing Student");
         border2.setTitleFont(titleFont);
         studentUpdateFormComponent.setBorder(border2);
-        formPanel.add(studentUpdateFormComponent);
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        formPanel.add(studentUpdateFormComponent, gbc);
+
+        gbc.gridy = 2;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        formPanel.add(Box.createVerticalStrut(0), gbc);
 
         add(formPanel, BorderLayout.WEST);
         add(studentsTableComponent, BorderLayout.CENTER);
