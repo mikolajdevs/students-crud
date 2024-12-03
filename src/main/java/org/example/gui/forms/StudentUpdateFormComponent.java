@@ -11,11 +11,11 @@ public class StudentUpdateFormComponent extends StudentFormComponent implements 
     public StudentUpdateFormComponent(StudentManager studentManager) {
         super(studentManager);
         submitButton.setText("Update student");
-        submitButton.addActionListener(_ -> onUpdateStudent());
         GuiContext.addSelectionListener(this);
     }
 
-    private void onUpdateStudent() {
+    @Override
+    protected void onSubmit() {
         String studentID = studentIDField.getText().trim();
         String name = nameField.getText().trim();
         int age;
@@ -31,8 +31,7 @@ public class StudentUpdateFormComponent extends StudentFormComponent implements 
         }
 
         Student newStudent = new Student(name, age, grade, studentID);
-
-        studentManager.addStudent(newStudent);
+        studentManager.updateStudent(newStudent);
         GuiContext.refresh();
 
         JOptionPane.showMessageDialog(

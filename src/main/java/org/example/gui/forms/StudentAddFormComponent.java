@@ -11,10 +11,10 @@ public class StudentAddFormComponent extends StudentFormComponent {
     public StudentAddFormComponent(StudentManager studentManager) {
         super(studentManager);
         submitButton.setText("Add student");
-        submitButton.addActionListener(_ -> onAddStudent());
     }
 
-    private void onAddStudent() {
+    @Override
+    protected void onSubmit() {
         String studentID = studentIDField.getText().trim();
         String name = nameField.getText().trim();
         int age;

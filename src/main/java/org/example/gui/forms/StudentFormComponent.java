@@ -28,6 +28,8 @@ public abstract class StudentFormComponent extends JPanel {
 
         List<JTextField> formFields = Arrays.asList(studentIDField, nameField, ageField, gradeField);
         initFormGrid(formFields);
+
+        submitButton.addActionListener(_ -> onSubmit());
     }
 
     private void initFormGrid(List<JTextField> formFields) {
@@ -56,6 +58,8 @@ public abstract class StudentFormComponent extends JPanel {
         gbc.gridwidth = 2;
         add(submitButton, gbc);
     }
+
+    protected abstract void onSubmit();
 
     protected void resetForm() {
         final var defaultText = "";

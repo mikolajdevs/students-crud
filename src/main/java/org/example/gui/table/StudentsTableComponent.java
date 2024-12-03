@@ -40,7 +40,11 @@ public class StudentsTableComponent extends JPanel implements Refreshable {
             }
         };
 
+        studentsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        studentsTable.setRowSelectionAllowed(true);
+        studentsTable.setColumnSelectionAllowed(false);
         studentsTable.setFillsViewportHeight(true);
+
         refresh();
         JScrollPane scrollPane = new JScrollPane(studentsTable);
 

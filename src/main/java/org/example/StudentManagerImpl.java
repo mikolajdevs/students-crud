@@ -55,8 +55,28 @@ public class StudentManagerImpl implements StudentManager {
     }
 
     @Override
-    public void updateStudent(String studentID) {
+    public void updateStudent(Student student) {
+        String sql = "UPDATE students SET name = ?, age = ?, grade = ? WHERE studentID = ?";
+        try (
+                Connection connection = this.connect();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            final var studentID = student.getStudentID();
+            statement.setString(1, student.getName());
+            statement.setInt(2, student.getAge());
+            statement.setDouble(3, student.getGrade());
+            statement.setString(4, studentID);
+            int affectedRows = statement.executeUpdate();
 
+            if (affectedRows == 0) {
+                System.out.println("Update failed: No student found with ID " + studentID);
+            } else {
+                System.out.println("Student with ID " + studentID + " updated successfully.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error updating student: " + e.getMessage());
+        }
     }
 
     @Override

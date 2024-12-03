@@ -7,7 +7,7 @@ public interface StudentManager {
 
     void removeStudent(String studentID);
 
-    void updateStudent(String studentID);
+    void updateStudent(Student student);
 
     ArrayList<Student> displayAllStudents();
 
