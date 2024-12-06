@@ -105,7 +105,20 @@ public class StudentManagerImpl implements StudentManager {
 
     @Override
     public double calculateAverageGrade() {
-        return 0;
+        String sql = "SELECT AVG(grade) AS averageGrade FROM students";
+        double averageGrade = 0.0;
+        try (
+                Connection connection = this.connect();
+                Statement statement = connection.createStatement();
+                ResultSet rs = statement.executeQuery(sql)
+        ) {
+            if (rs.next()) {
+                averageGrade = rs.getDouble("averageGrade");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error calculating average grade: " + e.getMessage());
+        }
+        return averageGrade;
     }
 
     private String generateNextStudentID() {

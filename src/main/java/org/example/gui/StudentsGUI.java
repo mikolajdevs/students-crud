@@ -59,12 +59,29 @@ public class StudentsGUI extends JFrame {
         formPanel.add(studentUpdateFormComponent, gbc);
 
         gbc.gridy = 2;
+        formPanel.add(calculateAverageButton(), gbc);
+
+        gbc.gridy = 3;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
         formPanel.add(Box.createVerticalStrut(0), gbc);
 
         add(formPanel, BorderLayout.WEST);
         add(studentsTableComponent, BorderLayout.CENTER);
+    }
+
+    JButton calculateAverageButton() {
+        final var button = new JButton("Calculate Average");
+        button.addActionListener(_ -> {
+            final var avg = studentManager.calculateAverageGrade();
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Average grade: " + avg,
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        });
+        return button;
     }
 
     JPanel gradientPanel() {
