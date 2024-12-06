@@ -38,6 +38,7 @@ public class StudentsGUI extends JFrame {
         formPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         JPanel studentAddFormComponent = new StudentAddFormComponent(studentManager);
         TitledBorder border = new TitledBorder("Add new Student");

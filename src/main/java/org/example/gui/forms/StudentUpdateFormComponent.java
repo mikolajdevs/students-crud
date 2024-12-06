@@ -5,6 +5,8 @@ import org.example.StudentManager;
 import org.example.gui.GuiContext;
 
 import javax.swing.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class StudentUpdateFormComponent extends StudentFormComponent implements SelectionListener {
 
@@ -12,6 +14,26 @@ public class StudentUpdateFormComponent extends StudentFormComponent implements 
         super(studentManager);
         submitButton.setText("Update student");
         GuiContext.addSelectionListener(this);
+    }
+
+    @Override
+    protected void createFormFields() {
+        formFields = Arrays.asList(
+                studentIDField = new JTextField(jTextFieldColumns),
+                nameField = new JTextField(jTextFieldColumns),
+                ageField = new JTextField(jTextFieldColumns),
+                gradeField = new JTextField(jTextFieldColumns)
+        );
+    }
+
+    @Override
+    protected List<JLabel> createLabels() {
+        return Arrays.asList(
+                new JLabel("Student ID:"),
+                new JLabel("Name:"),
+                new JLabel("Age:"),
+                new JLabel("Grade:")
+        );
     }
 
     @Override

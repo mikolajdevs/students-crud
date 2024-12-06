@@ -15,7 +15,6 @@ public class StudentAddFormComponent extends StudentFormComponent {
 
     @Override
     protected void onSubmit() {
-        String studentID = studentIDField.getText().trim();
         String name = nameField.getText().trim();
         int age;
         double grade;
@@ -29,7 +28,7 @@ public class StudentAddFormComponent extends StudentFormComponent {
             return;
         }
 
-        Student newStudent = new Student(name, age, grade, studentID);
+        Student newStudent = new Student(name, age, grade);
 
         studentManager.addStudent(newStudent);
         GuiContext.refresh();
