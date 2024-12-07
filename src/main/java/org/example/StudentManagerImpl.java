@@ -1,5 +1,8 @@
 package org.example;
 
+import org.example.gui.GuiService;
+import org.example.gui.messages.MessageType;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -29,8 +32,9 @@ public class StudentManagerImpl implements StudentManager {
             statement.setInt(3, student.getAge());
             statement.setDouble(4, student.getGrade());
             statement.executeUpdate();
+            GuiService.handleMessage("Student with ID " + nextStudentID + " added successfully");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            GuiService.handleMessage("Error adding student: " + e.getMessage(), MessageType.FAILURE);
         }
     }
 
@@ -45,12 +49,12 @@ public class StudentManagerImpl implements StudentManager {
             statement.setString(1, studentID);
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Student removed successfully.");
+                GuiService.handleMessage("Student " + studentID + " removed successfully.");
             } else {
-                System.out.println("No student found with ID: " + studentID);
+                GuiService.handleMessage("No student found with ID: " + studentID, MessageType.FAILURE);
             }
         } catch (SQLException e) {
-            System.out.println("Error removing student: " + e.getMessage());
+            GuiService.handleMessage("Error removing student: " + e.getMessage(), MessageType.FAILURE);
         }
     }
 
@@ -69,13 +73,12 @@ public class StudentManagerImpl implements StudentManager {
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
-                System.out.println("Update failed: No student found with ID " + studentID);
+                GuiService.handleMessage("Update failed: No student found with ID " + studentID, MessageType.FAILURE);
             } else {
-                System.out.println("Student with ID " + studentID + " updated successfully.");
+                GuiService.handleMessage("Student with ID " + studentID + " updated successfully.");
             }
-
         } catch (SQLException e) {
-            System.out.println("Error updating student: " + e.getMessage());
+            GuiService.handleMessage("Error updating student: " + e.getMessage(), MessageType.FAILURE);
         }
     }
 
@@ -98,7 +101,7 @@ public class StudentManagerImpl implements StudentManager {
                 students.add(student);
             }
         } catch (SQLException e) {
-            System.out.println("Error retrieving students: " + e.getMessage());
+            GuiService.handleMessage("Error retrieving students: " + e.getMessage(), MessageType.FAILURE);
         }
         return students;
     }
@@ -116,7 +119,7 @@ public class StudentManagerImpl implements StudentManager {
                 averageGrade = rs.getDouble("averageGrade");
             }
         } catch (SQLException e) {
-            System.out.println("Error calculating average grade: " + e.getMessage());
+            GuiService.handleMessage("Error calculating average grade: " + e.getMessage(), MessageType.FAILURE);
         }
         return averageGrade;
     }

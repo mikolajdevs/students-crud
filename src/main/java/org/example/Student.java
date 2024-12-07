@@ -35,7 +35,8 @@ public class Student {
         return studentID;
     }
 
-    public void displayInfo() {
-        System.out.println("Student ID: " + studentID + ", Name: " + name + ", Age: " + age + ", Grade: " + grade);
+    @Override
+    public String toString() {
+        return "Student ID: %s, Name: %s, Age: %d, Grade: %s".formatted(studentID, name, age, grade);
     }
 }

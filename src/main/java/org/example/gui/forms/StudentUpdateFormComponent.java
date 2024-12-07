@@ -2,7 +2,7 @@ package org.example.gui.forms;
 
 import org.example.Student;
 import org.example.StudentManager;
-import org.example.gui.GuiContext;
+import org.example.gui.GuiService;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -13,7 +13,7 @@ public class StudentUpdateFormComponent extends StudentFormComponent implements 
     public StudentUpdateFormComponent(StudentManager studentManager) {
         super(studentManager);
         submitButton.setText("Update student");
-        GuiContext.addSelectionListener(this);
+        GuiService.addSelectionListener(this);
     }
 
     @Override
@@ -47,22 +47,13 @@ public class StudentUpdateFormComponent extends StudentFormComponent implements 
             age = Integer.parseInt(ageField.getText().trim());
             grade = Double.parseDouble(gradeField.getText().trim());
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Please enter valid age and grade values.",
-                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println(e.getMessage());
             return;
         }
 
         Student newStudent = new Student(name, age, grade, studentID);
         studentManager.updateStudent(newStudent);
-        GuiContext.refresh();
-
-        JOptionPane.showMessageDialog(
-                this,
-                "Student added successfully!",
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE
-        );
-
+        GuiService.refresh();
         resetForm();
     }
 

@@ -2,7 +2,7 @@ package org.example.gui.table;
 
 import org.example.Student;
 import org.example.StudentManager;
-import org.example.gui.GuiContext;
+import org.example.gui.GuiService;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -25,7 +25,7 @@ public class StudentsTableComponent extends JPanel implements Refreshable {
 
     public StudentsTableComponent(StudentManager studentManager) {
         this.studentManager = studentManager;
-        GuiContext.addRefreshListener(this);
+        GuiService.addRefreshListener(this);
 
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -123,7 +123,7 @@ public class StudentsTableComponent extends JPanel implements Refreshable {
             String name = (String) studentsTable.getValueAt(selectedRow, columnModel.getColumnIndex(columnNames[1]));
             int age = (int) studentsTable.getValueAt(selectedRow, columnModel.getColumnIndex(columnNames[2]));
             double grade = (double) studentsTable.getValueAt(selectedRow, columnModel.getColumnIndex(columnNames[3]));
-            GuiContext.onSelect(new Student(name, age, grade, studentID));
+            GuiService.onSelect(new Student(name, age, grade, studentID));
         }
     }
 

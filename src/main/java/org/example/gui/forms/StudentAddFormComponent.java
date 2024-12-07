@@ -2,7 +2,7 @@ package org.example.gui.forms;
 
 import org.example.Student;
 import org.example.StudentManager;
-import org.example.gui.GuiContext;
+import org.example.gui.GuiService;
 
 import javax.swing.*;
 
@@ -23,23 +23,14 @@ public class StudentAddFormComponent extends StudentFormComponent {
             age = Integer.parseInt(ageField.getText().trim());
             grade = Double.parseDouble(gradeField.getText().trim());
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Please enter valid age and grade values.",
-                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println(e.getMessage());
             return;
         }
 
         Student newStudent = new Student(name, age, grade);
 
         studentManager.addStudent(newStudent);
-        GuiContext.refresh();
-
-        JOptionPane.showMessageDialog(
-                this,
-                "Student added successfully!",
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE
-        );
-
+        GuiService.refresh();
         resetForm();
     }
 }

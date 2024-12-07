@@ -1,8 +1,11 @@
 package org.example.gui;
 
+import org.example.Student;
 import org.example.StudentManager;
+import org.example.gui.messages.ConsoleComponent;
 import org.example.gui.forms.StudentAddFormComponent;
 import org.example.gui.forms.StudentUpdateFormComponent;
+import org.example.gui.messages.MessageConsole;
 import org.example.gui.table.StudentsTableComponent;
 
 import javax.swing.*;
@@ -10,10 +13,19 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.Objects;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import static org.example.gui.messages.ConsoleComponent.DEFAULT_CONSOLE_HEIGHT;
+import static org.example.gui.messages.MessageConsole.nowSuffix;
 
 public class StudentsGUI extends JFrame {
-    private final StudentManager studentManager;
     private static StudentsGUI instance;
+    private final StudentManager studentManager;
+    private final JPanel mainPanel = new JPanel();
+    private boolean showConsole = true;
+    private ConsoleComponent console;
 
     private StudentsGUI(StudentManager studentManager) {
         this.studentManager = studentManager;
@@ -44,7 +56,7 @@ public class StudentsGUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        StudentsTableComponent studentsTableComponent = new StudentsTableComponent(studentManager);
+        final StudentsTableComponent studentsTableComponent = new StudentsTableComponent(studentManager);
 
         JPanel formPanel = gradientPanel();
         formPanel.setLayout(new GridBagLayout());
@@ -78,8 +90,72 @@ public class StudentsGUI extends JFrame {
         gbc.fill = GridBagConstraints.BOTH;
         formPanel.add(Box.createVerticalStrut(0), gbc);
 
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.add(studentsTableComponent, BorderLayout.CENTER);
+
+        final boolean messageConsoleExists = GuiService.getMessageHandlers()
+                .stream().anyMatch(handler -> handler instanceof MessageConsole);
+        if (messageConsoleExists) {
+            initConsole();
+        }
+
         add(formPanel, BorderLayout.WEST);
-        add(studentsTableComponent, BorderLayout.CENTER);
+        add(mainPanel, BorderLayout.CENTER);
+    }
+
+    private void initConsole() {
+        JPanel consoleWrapper = new JPanel();
+        consoleWrapper.setLayout(new BorderLayout());
+
+        console = MessageConsole.getConsole();
+        Dimension consoleDimension = console.getPreferredSize();
+        console.setPreferredSize(new Dimension(consoleDimension.width, DEFAULT_CONSOLE_HEIGHT));
+
+        JButton displayAllStudentsButton = displayAllStudentsButton();
+
+        JButton toggleButton;
+        URL terminalIconUrl = getClass().getResource("/images/terminal.png");
+        if (terminalIconUrl != null) {
+            ImageIcon terminalIcon = new ImageIcon(Objects.requireNonNull(GuiUtils.getIconImage(terminalIconUrl)));
+            Image scaledImage = terminalIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+
+            toggleButton = new JButton(new ImageIcon(scaledImage));
+            toggleButton.setBorderPainted(false);
+            toggleButton.setContentAreaFilled(false);
+        } else {
+            toggleButton = new JButton("Toggle console");
+        }
+        toggleButton.addActionListener(_ -> {
+            showConsole = !showConsole;
+            int consoleHeight = showConsole ? DEFAULT_CONSOLE_HEIGHT : 0;
+            console.setPreferredSize(new Dimension(consoleDimension.width, consoleHeight));
+            displayAllStudentsButton.setEnabled(showConsole);
+            consoleWrapper.revalidate();
+        });
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        buttonPanel.add(displayAllStudentsButton);
+        buttonPanel.add(toggleButton);
+
+        consoleWrapper.add(buttonPanel, BorderLayout.NORTH);
+        consoleWrapper.add(console, BorderLayout.CENTER);
+        mainPanel.add(consoleWrapper, BorderLayout.SOUTH);
+    }
+
+    private JButton displayAllStudentsButton() {
+        JButton displayAllStudentsButton = new JButton("Display All Students");
+        displayAllStudentsButton.addActionListener(_ -> {
+                    List<Student> students = this.studentManager.displayAllStudents();
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("Students (").append(students.size()).append("): [\n");
+                    StringBuilder offset = new StringBuilder();
+                    IntStream.range(0, 5).forEach(_ -> offset.append(' '));
+                    students.forEach(student -> sb.append(offset).append(student.toString()).append(",\n"));
+                    sb.append("]");
+                    console.log(nowSuffix() + sb);
+                }
+        );
+        return displayAllStudentsButton;
     }
 
     JButton calculateAverageButton() {
