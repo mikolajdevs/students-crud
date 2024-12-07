@@ -13,10 +13,22 @@ import java.net.URL;
 
 public class StudentsGUI extends JFrame {
     private final StudentManager studentManager;
+    private static StudentsGUI instance;
 
-    public StudentsGUI(StudentManager studentManager) {
+    private StudentsGUI(StudentManager studentManager) {
         this.studentManager = studentManager;
         initUiComponents();
+    }
+
+    public static StudentsGUI getInstance(StudentManager studentManager) {
+        if (instance == null) {
+            instance = new StudentsGUI(studentManager);
+        }
+        return instance;
+    }
+
+    public static StudentsGUI getInstance() {
+        return instance;
     }
 
     private void initUiComponents() {
