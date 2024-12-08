@@ -3,6 +3,7 @@ package org.example.gui.forms;
 import org.example.Student;
 import org.example.StudentManager;
 import org.example.gui.GuiService;
+import org.example.gui.messages.MessageType;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -40,22 +41,32 @@ public class StudentUpdateFormComponent extends StudentFormComponent implements 
     protected void onSubmit() {
         String studentID = studentIDField.getText().trim();
         String name = nameField.getText().trim();
-        int age;
-        double grade;
+        String age = ageField.getText().trim();
+        String grade = gradeField.getText().trim();
 
-        try {
-            age = Integer.parseInt(ageField.getText().trim());
-            grade = Double.parseDouble(gradeField.getText().trim());
-        } catch (NumberFormatException e) {
-            System.out.println(e.getMessage());
+        boolean isAnyFieldEmpty = studentID.isEmpty() || name.isEmpty() || age.isEmpty() || grade.isEmpty();
+        if (isAnyFieldEmpty) {
+            GuiService.handleMessage("Each field is required", MessageType.FAILURE);
             return;
         }
-
-        Student newStudent = new Student(name, age, grade, studentID);
-        studentManager.updateStudent(newStudent);
-        GuiService.refresh();
-        resetForm();
+        try {
+            int ageParsed = Integer.parseInt(ageField.getText().trim());
+            double gradeParsed = Double.parseDouble(gradeField.getText().trim());
+            if (ageParsed <= 0) {
+                GuiService.handleMessage("Age must be a positive integer", MessageType.FAILURE);
+                return;
+            } else if (gradeParsed < 0.0 || gradeParsed > 100.0) {
+                GuiService.handleMessage("Grade must be between 0.0 and 100.0", MessageType.FAILURE);
+                return;
+            }
+            Student newStudent = new Student(name, ageParsed, gradeParsed, studentID);
+            studentManager.updateStudent(newStudent);
+            GuiService.refresh();
+        } catch (NumberFormatException e) {
+            GuiService.handleMessage("Age and grade must be valid numbers", MessageType.FAILURE);
+        }
     }
+
 
     @Override
     public void onSelectionChange(Student newStudent) {
