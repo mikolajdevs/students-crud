@@ -162,12 +162,7 @@ public class StudentsGUI extends JFrame {
         final var button = new JButton("Calculate Average");
         button.addActionListener(_ -> {
             final var avg = studentManager.calculateAverageGrade();
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Average grade: " + avg,
-                    "Success",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+            GuiService.handleMessage("Average grade: %s".formatted(avg));
         });
         return button;
     }
