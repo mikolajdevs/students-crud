@@ -7,8 +7,15 @@ import org.example.gui.messages.MessageConsole;
 public class Main {
 
     public static void main(String[] args) {
+        StudentManager studentManager = getStudentManager(args);
         GuiService.setMessageHandlers(new MessageConsole());
-        StudentManager studentManager = new StudentManagerImpl();
         StudentsGUI.getInstance(studentManager).setVisible(true);
+    }
+
+    private static StudentManager getStudentManager(String[] args) {
+        if (args.length == 1 && args[0].equals("--insert-test-records")) {
+            return new StudentManagerImpl(true);
+        }
+        return new StudentManagerImpl();
     }
 }

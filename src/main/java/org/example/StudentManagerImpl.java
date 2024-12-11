@@ -8,8 +8,63 @@ import java.util.ArrayList;
 
 public class StudentManagerImpl implements StudentManager {
 
+    public StudentManagerImpl() {
+        this.initializeDatabase();
+    }
+
+    public StudentManagerImpl(boolean withTestStudents) {
+        if (withTestStudents) {
+            String sqlScript = """
+                    INSERT INTO students (studentID, name, age, grade)
+                    VALUES
+                        ('s1', 'John Doe', 20, 85.5),
+                        ('s2', 'Jane Smith', 22, 90.0),
+                        ('s3', 'Michael Johnson', 21, 78.5),
+                        ('s4', 'Emily Davis', 19, 92.3),
+                        ('s5', 'Daniel Brown', 23, 88.0),
+                        ('s6', 'Sophia Wilson', 20, 95.7),
+                        ('s7', 'James Taylor', 22, 70.8),
+                        ('s8', 'Olivia Moore', 21, 85.0),
+                        ('s9', 'Liam Harris', 24, 80.5),
+                        ('s10', 'Ava Clark', 19, 91.2);
+                    """;
+            System.out.println(sqlScript);
+            this.initializeDatabase(sqlScript);
+        }
+    }
+
+    private void initializeDatabase() {
+        initializeDatabase(null);
+    }
+
+    private void initializeDatabase(String toAppend) {
+        String sqlScript = """
+                CREATE TABLE IF NOT EXISTS students
+                (
+                studentID TEXT PRIMARY KEY,
+                name      TEXT    NOT NULL,
+                age       INTEGER NOT NULL,
+                grade     REAL    NOT NULL
+                );
+                """;
+
+        try (
+                Connection connection = connect();
+                Statement statement = connection.createStatement()
+        ) {
+            statement.execute(sqlScript);
+            if (toAppend != null) {
+                statement.execute(toAppend);
+            }
+            statement.execute(sqlScript);
+            System.out.println("Database initialized.");
+        } catch (SQLException e) {
+            System.out.printf("Error initializing database: %s%n", e.getMessage());
+        }
+    }
+
     private Connection connect() {
-        String url = "jdbc:sqlite:students.db";
+        String url = "jdbc:sqlite:db/students.db";
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(url);

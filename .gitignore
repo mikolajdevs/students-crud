@@ -40,3 +40,5 @@ build/
 
 # Ignore all .db files
 *.db
+
+dependency-reduced-pom.xml
