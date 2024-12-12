@@ -63,6 +63,9 @@ public class StudentManagerImpl implements StudentManager {
         }
     }
 
+    /**
+     * Creates and returns database connection needed for every database request
+     */
     private Connection connect() {
         String url = "jdbc:sqlite:db/students.db";
         Connection connection = null;
@@ -74,6 +77,9 @@ public class StudentManagerImpl implements StudentManager {
         return connection;
     }
 
+    /**
+     * Adds new student with auto generated id
+     */
     @Override
     public void addStudent(Student student) {
         String sql = "INSERT INTO students(studentID, name, age, grade) VALUES(?,?,?,?)";
@@ -113,6 +119,9 @@ public class StudentManagerImpl implements StudentManager {
         }
     }
 
+    /**
+     * Updates student with given id if they already exist using prepared statement
+     */
     @Override
     public void updateStudent(Student student) {
         String sql = "UPDATE students SET name = ?, age = ?, grade = ? WHERE studentID = ?";
@@ -179,6 +188,10 @@ public class StudentManagerImpl implements StudentManager {
         return averageGrade;
     }
 
+    /**
+     * Generate next id of type String with pattern s{x} where 'x' is the highest number
+     * from existing ids +1.
+     */
     private String generateNextStudentID() {
         String sql = "SELECT studentID FROM students";
         int maxIDNumber = 0;

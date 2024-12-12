@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class is used for GUI's reactivity, for example it stores list of listeners
+ * The listeners are implementing certain interface and can be notified when import change happens
+ */
 public class GuiService {
     private static final List<SelectionListener> selectionListeners = new ArrayList<>();
     private static final List<Refreshable> refreshListeners = new ArrayList<>();

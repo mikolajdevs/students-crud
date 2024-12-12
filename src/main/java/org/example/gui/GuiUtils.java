@@ -10,6 +10,9 @@ public class GuiUtils {
     public final static Color C_PRIMARY = new Color(0, 80, 255, 120);
     public final static Color C_NAVY = new Color(24, 32, 50);
 
+    /**
+     * Tints image using given color
+     */
     private static BufferedImage tintImage(BufferedImage original, Color tint) {
         BufferedImage tintedImage = new BufferedImage(
                 original.getWidth(), original.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -24,6 +27,9 @@ public class GuiUtils {
         return tintedImage;
     }
 
+    /**
+     * Reads and returns icon image
+     */
     public static BufferedImage getIconImage(URL iconUrl) {
         try {
             BufferedImage originalIcon = ImageIO.read(iconUrl);

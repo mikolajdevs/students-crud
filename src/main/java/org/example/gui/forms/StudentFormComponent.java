@@ -42,6 +42,9 @@ public abstract class StudentFormComponent extends JPanel {
         return Arrays.asList(new JLabel("Name:"), new JLabel("Age:"), new JLabel("Grade:"));
     }
 
+    /**
+     * Creates form grid for proper displaying fields with their labels
+     */
     private void initFormGrid() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -66,6 +69,9 @@ public abstract class StudentFormComponent extends JPanel {
         add(submitButton, gbc);
     }
 
+    /**
+     * Abstract method that is implemented differently in Add/Update forms
+     */
     protected abstract void onSubmit();
 
     protected void resetForm() {

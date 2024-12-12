@@ -12,6 +12,9 @@ public class Main {
         StudentsGUI.getInstance(studentManager).setVisible(true);
     }
 
+    /**
+     * Handles user's optional argument for inserting sample records to the db
+     */
     private static StudentManager getStudentManager(String[] args) {
         if (args.length == 1 && args[0].equals("--insert-test-records")) {
             return new StudentManagerImpl(true);

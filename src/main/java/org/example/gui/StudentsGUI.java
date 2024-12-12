@@ -43,6 +43,9 @@ public class StudentsGUI extends JFrame {
         return instance;
     }
 
+    /**
+     * Inits UI components: table, forms, console
+     */
     private void initUiComponents() {
         setTitle("Student Management System");
         URL iconUrl = getClass().getResource("/images/layers.png");
@@ -103,6 +106,9 @@ public class StudentsGUI extends JFrame {
         add(mainPanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Creates console components for displaying system messages
+     */
     private void initConsole() {
         JPanel consoleWrapper = new JPanel();
         consoleWrapper.setLayout(new BorderLayout());
